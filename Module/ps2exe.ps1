@@ -124,11 +124,11 @@ function Invoke-ps2exe
 <##                                                                            ##>
 <################################################################################>
 
-	if (!$nested)
+	if (!$nested -and !$noOutput)
 	{
 		Write-Output "PS2EXE-GUI v0.5.0.29 by Ingo Karstein, reworked and GUI support by Markus Scholtes`n"
 	}
-	else
+	elseif ($nested)
 	{
 		Write-Output "PowerShell Desktop environment started...`n"
 	}
@@ -417,7 +417,7 @@ function Invoke-ps2exe
 		$cp.TempFiles.KeepFiles = $TRUE
 	}
 
-	Write-Output "Reading input file $inputFile"
+	if (!$noOutput) { Write-Output "Reading input file $inputFile" }
 	[VOID]$cp.EmbeddedResources.Add($inputFile)
 
 	$culture = ""
@@ -2753,7 +2753,7 @@ $(if (!$noConsole) {@"
 	}
 	$configFileForEXE3 += "</configuration>"
 
-	Write-Output "Compiling file...`n"
+	if (!$noOutput) { Write-Output "Compiling file ...`n" }
 	$cr = $cop.CompileAssemblyFromSource($cp, $programFrame)
 	if ($cr.Errors.Count -gt 0)
 	{
@@ -2768,7 +2768,7 @@ $(if (!$noConsole) {@"
 	{
 		if (Test-Path -LiteralPath $outputFile)
 		{
-			Write-Output "Output file $outputFile written"
+			if (!$noOutput) { Write-Output "Output file $outputFile written" }
 
 			if ($prepareDebug)
 			{
